@@ -2,9 +2,7 @@
   display: flex;
   width: 451px;
   box-shadow: 0px 4px 12px 0px #00000026;
-  
 }
-
 
 .card__img img {
   height: 100%;
@@ -25,7 +23,7 @@
   margin: 0;
 }
 
-.rate svg{
+.rate svg {
   width: 15px;
   height: 15px;
 }
