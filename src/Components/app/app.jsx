@@ -16,7 +16,6 @@ export default class App extends Component {
   }
 
   setMovieData = (name) => {
-    // console.log(this.movieAPI.getData());
     this.movieAPI.getData(name).then((result) => {
       this.setState(() => {
         return {
@@ -36,6 +35,7 @@ export default class App extends Component {
 
   render() {
     this.setMovieData('hobbit');
+
     const { movieData } = this.state;
 
     return (
