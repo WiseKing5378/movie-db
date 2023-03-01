@@ -13,30 +13,28 @@ export default class App extends Component {
     this.state = {
       movieData: [],
     };
+    this.setMovieData('hobbit');
   }
 
   setMovieData = (name) => {
     this.movieAPI.getData(name).then((result) => {
-      this.setState(() => {
-        return {
-          movieData: result.map((i) => {
-            return {
-              title: i.title,
-              overview: i.overview,
-              releaseDate: i.release_date,
-              posterPath: i.poster_path,
-              id: i.id,
-            };
-          }),
-        };
+      this.setState({
+        movieData: result.map((i) => {
+          return {
+            title: i.title,
+            overview: i.overview,
+            releaseDate: i.release_date,
+            posterPath: i.poster_path,
+            id: i.id,
+          };
+        }),
       });
     });
   };
 
   render() {
-    this.setMovieData('hobbit');
-
     const { movieData } = this.state;
+    console.log(movieData);
 
     return (
       <section className="movieapp">
