@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Space, Tag, Typography, Rate } from 'antd';
 
 import './card.css';
-// import Photo from './1.png';
+import Photo from './1.png';
 
 export default class Card extends Component {
   render() {
@@ -11,10 +11,10 @@ export default class Card extends Component {
     return (
       <li className="card">
         <div className="card__img">
-          <img src={posterPath} alt="Movie" />
+          <img src={posterPath ? `https://image.tmdb.org/t/p/w500/${posterPath}` : Photo} alt="Movie" />
         </div>
         <div className="card__description">
-          <Title className="card__title" level={3}>
+          <Title className="card__title" level={4}>
             {title}
           </Title>
           <Text type="secondary">{releaseDate}</Text>
@@ -22,7 +22,7 @@ export default class Card extends Component {
             <Tag>Tag 1</Tag>
             <Tag>Tag 2</Tag>
           </Space>
-          <Text className="card__text">{`${overview.replace(/^(.{200}[^\s]*).*/, '$1')}...`}</Text>
+          <Text className="card__text">{`${overview.replace(/^(.{90}[^\s]*).*/, '$1')}...`}</Text>
           <Rate className="rate" count="10" allowHalf="true" />
         </div>
       </li>

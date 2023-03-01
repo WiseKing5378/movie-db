@@ -1,11 +1,18 @@
 .card {
   display: flex;
   width: 451px;
+  height: 281px;
   box-shadow: 0px 4px 12px 0px #00000026;
 }
 
+.card__img{
+
+  width: 183px
+}
 .card__img img {
+  
   height: 100%;
+  width:183px
 }
 
 .card__description {

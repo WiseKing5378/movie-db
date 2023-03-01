@@ -15,8 +15,9 @@ export default class App extends Component {
     };
   }
 
-  setMovieData = () => {
-    this.movieAPI.getData().then((result) => {
+  setMovieData = (name) => {
+    // console.log(this.movieAPI.getData());
+    this.movieAPI.getData(name).then((result) => {
       this.setState(() => {
         return {
           movieData: result.map((i) => {
@@ -25,6 +26,7 @@ export default class App extends Component {
               overview: i.overview,
               releaseDate: i.release_date,
               posterPath: i.poster_path,
+              id: i.id,
             };
           }),
         };
@@ -33,7 +35,7 @@ export default class App extends Component {
   };
 
   render() {
-    this.setMovieData();
+    this.setMovieData('hobbit');
     const { movieData } = this.state;
 
     return (
