@@ -18,21 +18,24 @@ export default class App extends Component {
       movieData: [],
       loading: true,
       error: false,
-      movie: 'hobbit',
+      movie: 'g',
+      page: 1,
+      totalPages: 1,
+      newPage: null,
     };
   }
 
   componentDidMount() {
-    const { movie } = this.state;
-    this.setMovieData(movie);
+    const { movie, page } = this.state;
+    this.setMovieData(movie, page);
+    this.getPage(1);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { movie } = this.state;
-
-    if (movie !== prevState.movie) {
+    const { movie, newPage } = this.state;
+    if (movie !== prevState.movie || newPage !== prevState.newPage) {
       this.setState({ loading: true });
-      this.setMovieData(movie);
+      this.setMovieData(movie, newPage);
     }
   }
 
@@ -40,12 +43,12 @@ export default class App extends Component {
     this.setState({ error: true, loading: false });
   };
 
-  setMovieData = (name) => {
+  setMovieData = (name, page) => {
     this.movieAPI
-      .getData(name)
-      .then((result) => {
+      .getData(name, page)
+      .then((data) => {
         this.setState({
-          movieData: result.map((i) => {
+          movieData: data.results.map((i) => {
             return {
               title: i.title,
               overview: i.overview,
@@ -55,6 +58,7 @@ export default class App extends Component {
             };
           }),
           loading: false,
+          totalPages: data.total_pages,
         });
       })
       .catch(() => {
@@ -70,9 +74,12 @@ export default class App extends Component {
     debounce(this.updateMovieState, 1000).call(this, event);
   };
 
-  render() {
-    const { movieData, loading, error } = this.state;
+  getPage = (page) => {
+    this.setState({ newPage: page });
+  };
 
+  render() {
+    const { movieData, loading, error, totalPages } = this.state;
     const loader = loading ? <Spin size="large" /> : null;
     const content = !loading ? <CardList movieData={movieData} /> : null;
     const err =
@@ -86,7 +93,7 @@ export default class App extends Component {
         <section className="main">
           {loader} {content} {err}
         </section>
-        <Footer />
+        <Footer totalPages={totalPages} getPage={this.getPage} />
       </section>
     );
   }
