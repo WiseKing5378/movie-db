@@ -1,5 +1,7 @@
+/* eslint-disable class-methods-use-this */
 import { Component } from 'react';
 import { Spin, Alert } from 'antd';
+import { debounce } from 'lodash';
 
 import CardList from '../card-list';
 import Header from '../header';
@@ -16,8 +18,22 @@ export default class App extends Component {
       movieData: [],
       loading: true,
       error: false,
+      movie: 'hobbit',
     };
-    this.setMovieData('hobbit');
+  }
+
+  componentDidMount() {
+    const { movie } = this.state;
+    this.setMovieData(movie);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { movie } = this.state;
+
+    if (movie !== prevState.movie) {
+      this.setState({ loading: true });
+      this.setMovieData(movie);
+    }
   }
 
   setError = () => {
@@ -46,14 +62,27 @@ export default class App extends Component {
       });
   };
 
+  updateMovieState = (event) => {
+    if (event.target.value.replace(/\s+/g, '')) this.setState({ movie: event.target.value });
+  };
+
+  getInputValue = (event) => {
+    debounce(this.updateMovieState, 1000).call(this, event);
+  };
+
   render() {
     const { movieData, loading, error } = this.state;
+
     const loader = loading ? <Spin size="large" /> : null;
     const content = !loading ? <CardList movieData={movieData} /> : null;
-    const err = error ? <Alert message="Movie not found" type="warning" showIcon /> : null;
+    const err =
+      error || (movieData.length === 0 && !loading) ? (
+        <Alert message="Movie not found" type="warning" showIcon />
+      ) : null;
+
     return (
       <section className="movieapp">
-        <Header />
+        <Header getInputValue={this.getInputValue} />
         <section className="main">
           {loader} {content} {err}
         </section>

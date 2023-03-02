@@ -1,8 +1,10 @@
+/* eslint-disable class-methods-use-this */
 import { Component } from 'react';
 import { Tabs, Input } from 'antd';
 
 export default class Header extends Component {
   render() {
+    const { getInputValue } = this.props;
     return (
       <header>
         <Tabs
@@ -15,7 +17,7 @@ export default class Header extends Component {
             {
               label: 'Search',
               key: '1',
-              children: <Input placeholder="Type to search" />,
+              children: <Input onInput={getInputValue} placeholder="Type to search" />,
             },
             {
               label: 'Rated',
