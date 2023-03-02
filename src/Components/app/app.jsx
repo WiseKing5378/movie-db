@@ -44,7 +44,6 @@ export default class App extends Component {
   };
 
   setMovieData = (name, page) => {
-    console.log(page);
     this.movieAPI
       .getData(name, page)
       .then((data) => {
