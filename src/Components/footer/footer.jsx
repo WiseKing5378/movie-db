@@ -6,10 +6,11 @@ import './footer.css';
 
 export default class Footer extends Component {
   render() {
-    const { getPage, totalPages } = this.props;
+    const { getPage, totalPages, newPage } = this.props;
+
     return (
       <footer className="pagination">
-        <Pagination onChange={getPage} defaultCurrent={1} total={totalPages} />
+        <Pagination onChange={getPage} current={newPage} total={totalPages} hideOnSinglePage />
       </footer>
     );
   }

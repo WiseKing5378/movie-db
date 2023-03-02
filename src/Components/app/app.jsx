@@ -18,22 +18,25 @@ export default class App extends Component {
       movieData: [],
       loading: true,
       error: false,
-      movie: 'g',
-      page: 1,
+      movie: 'hobbit',
       totalPages: null,
       newPage: null,
     };
   }
 
   componentDidMount() {
-    const { movie, page } = this.state;
-    this.setMovieData(movie, page);
+    const { movie } = this.state;
+    this.setMovieData(movie, 1);
     this.getPage(1);
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { movie, newPage } = this.state;
-    if (movie !== prevState.movie || newPage !== prevState.newPage) {
+    if (movie !== prevState.movie) {
+      this.setState({ loading: true });
+      this.setMovieData(movie, 1);
+    }
+    if (newPage !== prevState.newPage) {
       this.setState({ loading: true });
       this.setMovieData(movie, newPage);
     }
@@ -79,7 +82,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { movieData, loading, error, totalPages } = this.state;
+    const { movieData, loading, error, totalPages, newPage } = this.state;
     const loader = loading ? <Spin size="large" /> : null;
     const content = !loading ? <CardList movieData={movieData} /> : null;
     const err =
@@ -93,7 +96,7 @@ export default class App extends Component {
         <section className="main">
           {loader} {content} {err}
         </section>
-        <Footer totalPages={totalPages} getPage={this.getPage} />
+        <Footer totalPages={totalPages} getPage={this.getPage} newPage={newPage} />
       </section>
     );
   }
