@@ -21,17 +21,34 @@ export default class App extends Component {
       movie: 'hobbit',
       totalPages: null,
       newPage: null,
+      sessionId: null,
+      rateMovieId: null,
+      rateValue: null,
+      ratedMovieData: [],
     };
   }
 
   componentDidMount() {
-    this.movieAPI.createGuestSession();
+    this.movieAPI.createGuestSession().then((data) => {
+      this.setState({ sessionId: data });
+    });
     const { movie } = this.state;
     this.setMovieData(movie, 1);
     this.getPage(1);
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { sessionId, rateMovieId, rateValue, ratedMovieData } = this.state;
+
+    if (rateMovieId && rateValue && rateMovieId !== prevState.rateMovieId) {
+      this.movieAPI.rateMovie(sessionId, rateMovieId, rateValue).then((r) => {
+        if (r.success) {
+          this.movieAPI.getRatedMovies(sessionId).then((res) => this.setState({ ratedMovieData: res.results }));
+        }
+      });
+    }
+    if (ratedMovieData !== prevState.ratedMovieData) setTimeout(() => console.log(ratedMovieData), 1000);
+
     const { movie, newPage } = this.state;
     if (movie !== prevState.movie) {
       this.setState({ loading: true });
@@ -84,6 +101,7 @@ export default class App extends Component {
 
   render() {
     const { movieData, loading, error, totalPages, newPage } = this.state;
+
     const loader = loading ? <Spin size="large" /> : null;
     const content = !loading ? <CardList movieData={movieData} /> : null;
     const err =
@@ -93,6 +111,12 @@ export default class App extends Component {
 
     return (
       <section className="movieapp">
+        <input
+          type="text"
+          onInput={(event) => {
+            this.setState({ rateMovieId: event.target.value, rateValue: 7 });
+          }}
+        />
         <Header getInputValue={this.getInputValue} />
         <section className="main">
           {loader} {content} {err}
