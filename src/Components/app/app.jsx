@@ -25,6 +25,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
+    this.movieAPI.createGuestSession();
     const { movie } = this.state;
     this.setMovieData(movie, 1);
     this.getPage(1);
