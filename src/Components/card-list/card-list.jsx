@@ -6,13 +6,23 @@ import './card-list.css';
 
 export default class CardList extends Component {
   render() {
-    const { movieData } = this.props;
+    const { movieData, getRateMovieValues } = this.props;
 
-    let keyMax = 0;
     const dataArr = movieData.map((i) => {
-      const { title, overview, releaseDate, posterPath } = i;
-      keyMax += 1;
-      return <Card key={keyMax} title={title} overview={overview} releaseDate={releaseDate} posterPath={posterPath} />;
+      const { title, overview, releaseDate, posterPath, id, rateValue } = i;
+
+      return (
+        <Card
+          getRateMovieValues={getRateMovieValues}
+          key={id}
+          id={id}
+          title={title}
+          overview={overview}
+          releaseDate={releaseDate}
+          posterPath={posterPath}
+          rateValue={rateValue}
+        />
+      );
     });
 
     return <ul className="card-list">{dataArr}</ul>;

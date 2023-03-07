@@ -1,10 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { Component } from 'react';
-import { Spin, Alert } from 'antd';
 import { debounce } from 'lodash';
 
-import CardList from '../card-list';
-import Header from '../header';
+import MainTabs from '../MainTabs';
 import Footer from '../footer';
 import MovieAPI from '../movieAPI/movieAPI';
 import './app.css';
@@ -24,7 +22,6 @@ export default class App extends Component {
       sessionId: null,
       rateMovieId: null,
       rateValue: null,
-      ratedMovieData: [],
     };
   }
 
@@ -32,23 +29,24 @@ export default class App extends Component {
     this.movieAPI.createGuestSession().then((data) => {
       this.setState({ sessionId: data });
     });
+
     const { movie } = this.state;
     this.setMovieData(movie, 1);
     this.getPage(1);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { sessionId, rateMovieId, rateValue, ratedMovieData } = this.state;
+    const { rateMovieId, rateValue, sessionId } = this.state;
 
-    if (rateMovieId && rateValue && rateMovieId !== prevState.rateMovieId) {
-      this.movieAPI.rateMovie(sessionId, rateMovieId, rateValue).then((r) => {
-        if (r.success) {
-          this.movieAPI.getRatedMovies(sessionId).then((res) => this.setState({ ratedMovieData: res.results }));
-        }
-      });
+    if (rateMovieId && rateValue && rateMovieId !== prevState.rateMovieId && rateValue !== prevState.rateValue) {
+      this.movieAPI.rateMovie(sessionId, rateMovieId, rateValue);
     }
-    if (ratedMovieData !== prevState.ratedMovieData) setTimeout(() => console.log(ratedMovieData), 1000);
 
+    if (rateValue !== prevState.rateValue || rateMovieId !== prevState.rateMovieId) {
+      this.updateRate(rateMovieId, rateValue);
+    }
+
+    this.addRatedMovies();
     const { movie, newPage } = this.state;
     if (movie !== prevState.movie) {
       this.setState({ loading: true });
@@ -76,6 +74,7 @@ export default class App extends Component {
               releaseDate: i.release_date,
               posterPath: i.poster_path,
               id: i.id,
+              rateValue: null,
             };
           }),
           loading: false,
@@ -85,6 +84,25 @@ export default class App extends Component {
       .catch(() => {
         this.setError();
       });
+  };
+
+  addRatedMovies = () => {
+    const { movieData } = this.state;
+    localStorage.setItem('ratedMovies', JSON.stringify(movieData.filter((i) => i.rateValue)));
+  };
+
+  updateRate = (movieId, rateValue) => {
+    this.setState(({ movieData }) => {
+      return {
+        movieData: movieData.map((i) => {
+          if (i.id === movieId) {
+            // eslint-disable-next-line no-param-reassign
+            i = { ...i, rateValue };
+          }
+          return i;
+        }),
+      };
+    });
   };
 
   updateMovieState = (event) => {
@@ -99,28 +117,24 @@ export default class App extends Component {
     this.setState({ newPage: page });
   };
 
+  getRateMovieValues = (value, id) => {
+    console.log(value, id);
+    this.setState({ rateMovieId: id, rateValue: value });
+  };
+
   render() {
     const { movieData, loading, error, totalPages, newPage } = this.state;
-
-    const loader = loading ? <Spin size="large" /> : null;
-    const content = !loading ? <CardList movieData={movieData} /> : null;
-    const err =
-      error || (movieData.length === 0 && !loading) ? (
-        <Alert message="Movie not found" type="warning" showIcon />
-      ) : null;
-
+    this.addRatedMovies();
     return (
       <section className="movieapp">
-        <input
-          type="text"
-          onInput={(event) => {
-            this.setState({ rateMovieId: event.target.value, rateValue: 7 });
-          }}
+        <MainTabs
+          getRateMovieValues={this.getRateMovieValues}
+          loading={loading}
+          movieData={movieData}
+          error={error}
+          getInputValue={this.getInputValue}
+          ratedMovies={JSON.parse(localStorage.getItem('ratedMovies'))}
         />
-        <Header getInputValue={this.getInputValue} />
-        <section className="main">
-          {loader} {content} {err}
-        </section>
         <Footer totalPages={totalPages} getPage={this.getPage} newPage={newPage} />
       </section>
     );

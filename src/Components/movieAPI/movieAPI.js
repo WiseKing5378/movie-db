@@ -30,12 +30,12 @@ export default class MovieAPI {
       }
     );
     const data = await resp.json();
-    return data;
+    return data.success;
   }
 
   async getRatedMovies(sessionId) {
     const resp = await fetch(`${this.baseUrl}/guest_session/${sessionId}/rated/movies?api_key=${this.apiKey}`);
     const data = await resp.json();
-    return data;
+    return data.results;
   }
 }

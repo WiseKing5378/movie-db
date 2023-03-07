@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { Component } from 'react';
 import { Space, Tag, Typography, Rate } from 'antd';
 
@@ -6,7 +7,7 @@ import Photo from './1.png';
 
 export default class Card extends Component {
   render() {
-    const { title, overview, releaseDate, posterPath } = this.props;
+    const { title, overview, releaseDate, posterPath, id, getRateMovieValues, rateValue } = this.props;
     const { Title, Text } = Typography;
     return (
       <li className="card">
@@ -23,7 +24,15 @@ export default class Card extends Component {
             <Tag>Tag 2</Tag>
           </Space>
           <Text className="card__text">{`${overview.replace(/^(.{90}[^\s]*).*/, '$1')}...`}</Text>
-          <Rate className="rate" count="10" allowHalf="true" />
+          <Rate
+            value={rateValue}
+            className="rate"
+            count="10"
+            allowHalf="true"
+            onChange={(value) => {
+              getRateMovieValues(value, id);
+            }}
+          />
         </div>
       </li>
     );
