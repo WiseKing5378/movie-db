@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable class-methods-use-this */
 import { Component } from 'react';
 import { Tabs, Input, Spin, Alert } from 'antd';
@@ -17,7 +18,6 @@ export default class MainTabs extends Component {
 
   render() {
     const { getInputValue, movieData, ratedMovies, loading, error, getRateMovieValues } = this.props;
-    const { activeTab } = this.state;
 
     const loader = loading ? <Spin size="large" /> : null;
     const content = !loading ? <CardList getRateMovieValues={getRateMovieValues} movieData={movieData} /> : null;
@@ -25,7 +25,7 @@ export default class MainTabs extends Component {
       error || (movieData.length === 0 && !loading) ? (
         <Alert message="Movie not found" type="warning" showIcon />
       ) : null;
-    console.log(activeTab);
+
     return (
       <Tabs
         onChange={(activeKey) => {

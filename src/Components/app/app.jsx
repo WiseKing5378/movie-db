@@ -33,6 +33,8 @@ export default class App extends Component {
     const { movie } = this.state;
     this.setMovieData(movie, 1);
     this.getPage(1);
+
+    this.addRatedMovies();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -87,8 +89,18 @@ export default class App extends Component {
   };
 
   addRatedMovies = () => {
-    const { movieData } = this.state;
-    localStorage.setItem('ratedMovies', JSON.stringify(movieData.filter((i) => i.rateValue)));
+    const { movieData, rateMovieId } = this.state;
+    if (localStorage.length === 0 || localStorage.getItem('ratedMovies') === '[]') {
+      localStorage.setItem('ratedMovies', JSON.stringify(movieData.filter((i) => i.rateValue)));
+    }
+    const arrLocal = JSON.parse(localStorage.getItem('ratedMovies'));
+
+    const arr = arrLocal.filter((i) => i.id === rateMovieId);
+
+    if (arr.length === 0) {
+      arrLocal.push(...movieData.filter((i) => i.id === rateMovieId));
+    }
+    localStorage.setItem('ratedMovies', JSON.stringify(arrLocal));
   };
 
   updateRate = (movieId, rateValue) => {
@@ -118,13 +130,12 @@ export default class App extends Component {
   };
 
   getRateMovieValues = (value, id) => {
-    console.log(value, id);
     this.setState({ rateMovieId: id, rateValue: value });
   };
 
   render() {
     const { movieData, loading, error, totalPages, newPage } = this.state;
-    this.addRatedMovies();
+
     return (
       <section className="movieapp">
         <MainTabs
