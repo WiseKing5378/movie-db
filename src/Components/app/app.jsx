@@ -25,9 +25,13 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this.movieAPI.createGuestSession().then((data) => {
-      this.setState({ sessionId: data });
-    });
+    if (localStorage.getItem('token') === null) {
+      this.movieAPI.createGuestSession().then((data) => {
+        this.setState({ sessionId: data });
+      });
+    } else {
+      this.setState({ sessionId: JSON.parse(localStorage.getItem('token')) });
+    }
 
     const { movie } = this.state;
     this.setMovieData(movie, 1);
