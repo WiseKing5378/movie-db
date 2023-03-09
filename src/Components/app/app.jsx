@@ -48,7 +48,9 @@ export default class App extends Component {
       this.updateRate(rateMovieId, rateValue);
     }
 
-    this.addRatedMovies();
+    setTimeout(() => {
+      this.addRatedMovies();
+    });
     const { movie, newPage } = this.state;
     if (movie !== prevState.movie) {
       this.setState({ loading: true });
@@ -77,6 +79,7 @@ export default class App extends Component {
               posterPath: i.poster_path,
               id: i.id,
               rateValue: null,
+              rateAvg: Number(i.vote_average.toFixed(1)),
             };
           }),
           loading: false,
@@ -86,6 +89,20 @@ export default class App extends Component {
       .catch(() => {
         this.setError();
       });
+  };
+
+  updateRate = (movieId, rateValue) => {
+    this.setState(({ movieData }) => {
+      return {
+        movieData: movieData.map((i) => {
+          if (i.id === movieId) {
+            // eslint-disable-next-line no-param-reassign
+            i = { ...i, rateValue };
+          }
+          return i;
+        }),
+      };
+    });
   };
 
   addRatedMovies = () => {
@@ -101,20 +118,6 @@ export default class App extends Component {
       arrLocal.push(...movieData.filter((i) => i.id === rateMovieId));
     }
     localStorage.setItem('ratedMovies', JSON.stringify(arrLocal));
-  };
-
-  updateRate = (movieId, rateValue) => {
-    this.setState(({ movieData }) => {
-      return {
-        movieData: movieData.map((i) => {
-          if (i.id === movieId) {
-            // eslint-disable-next-line no-param-reassign
-            i = { ...i, rateValue };
-          }
-          return i;
-        }),
-      };
-    });
   };
 
   updateMovieState = (event) => {

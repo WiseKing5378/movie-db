@@ -13,6 +13,20 @@
   width: 183px;
 }
 
+.title-sec{
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  
+}
+.ant-progress-inner{
+  display: flex;
+  width:35px !important;
+  height: 35px !important;
+  font-size: 14px !important;
+
+}
+
 .card__description {
   display: flex;
   flex-direction: column;
@@ -26,6 +40,7 @@
 
 .card__title {
   margin: 0;
+max-width: 190px;
 }
 
 .rate svg {
