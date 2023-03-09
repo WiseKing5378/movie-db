@@ -72,13 +72,14 @@ export default class App extends Component {
       .then((data) => {
         this.setState({
           movieData: data.results.map((i) => {
+            const lsItem = JSON.parse(localStorage.getItem('ratedMovies')).filter((item) => item.id === i.id);
             return {
               title: i.title,
               overview: i.overview,
               releaseDate: i.release_date,
               posterPath: i.poster_path,
               id: i.id,
-              rateValue: null,
+              rateValue: lsItem.length !== 0 ? lsItem[0].rateValue : null,
               rateAvg: Number(i.vote_average.toFixed(1)),
             };
           }),
@@ -106,9 +107,10 @@ export default class App extends Component {
   };
 
   addRatedMovies = () => {
-    const { movieData, rateMovieId } = this.state;
+    const { movieData, rateMovieId, sessionId } = this.state;
     if (localStorage.length === 0 || localStorage.getItem('ratedMovies') === '[]') {
       localStorage.setItem('ratedMovies', JSON.stringify(movieData.filter((i) => i.rateValue)));
+      localStorage.setItem('token', JSON.stringify(sessionId));
     }
     const arrLocal = JSON.parse(localStorage.getItem('ratedMovies'));
 
