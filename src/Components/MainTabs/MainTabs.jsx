@@ -5,6 +5,7 @@ import { Tabs, Input, Spin, Alert } from 'antd';
 
 import CardList from '../card-list';
 import './MainTabs.css';
+import Footer from '../footer';
 
 export default class MainTabs extends Component {
   constructor() {
@@ -17,7 +18,8 @@ export default class MainTabs extends Component {
   componentDidUpdate() {}
 
   render() {
-    const { getInputValue, movieData, ratedMovies, loading, error, getRateMovieValues } = this.props;
+    const { getInputValue, movieData, ratedMovies, loading, error, getRateMovieValues, totalPages, getPage, newPage } =
+      this.props;
 
     const loader = loading ? <Spin size="large" /> : null;
     const content = !loading ? <CardList getRateMovieValues={getRateMovieValues} movieData={movieData} /> : null;
@@ -46,6 +48,7 @@ export default class MainTabs extends Component {
                 <section className="main">
                   {loader} {content} {err}
                 </section>
+                <Footer totalPages={totalPages} getPage={getPage} newPage={newPage} />
               </div>
             ),
           },

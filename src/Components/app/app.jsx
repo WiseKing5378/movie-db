@@ -3,7 +3,6 @@ import { Component } from 'react';
 import { debounce } from 'lodash';
 
 import MainTabs from '../MainTabs';
-import Footer from '../footer';
 import MovieAPI from '../movieAPI/movieAPI';
 import './app.css';
 
@@ -150,8 +149,10 @@ export default class App extends Component {
           error={error}
           getInputValue={this.getInputValue}
           ratedMovies={JSON.parse(localStorage.getItem('ratedMovies'))}
+          totalPages={totalPages}
+          getPage={this.getPage}
+          newPage={newPage}
         />
-        <Footer totalPages={totalPages} getPage={this.getPage} newPage={newPage} />
       </section>
     );
   }
