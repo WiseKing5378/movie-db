@@ -22,7 +22,7 @@ export default class Card extends Component {
         </div>
         <div className="card__description">
           <div className="title-sec">
-            <Title className="card__title" level={4}>
+            <Title className="card__title" level={5}>
               {title}
             </Title>
             <Space>
