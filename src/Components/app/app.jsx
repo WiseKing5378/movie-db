@@ -17,14 +17,16 @@ export default class App extends Component {
       error: false,
       movie: 'hobbit',
       totalPages: null,
-      newPage: null,
+      newPage: 1,
       sessionId: null,
       rateMovieId: null,
       rateValue: null,
+      genresData: null,
     };
   }
 
   componentDidMount() {
+    // const { movie } = this.state;
     if (localStorage.getItem('token') === null) {
       this.movieAPI.createGuestSession().then((data) => {
         this.setState({ sessionId: data });
@@ -33,36 +35,32 @@ export default class App extends Component {
       this.setState({ sessionId: JSON.parse(localStorage.getItem('token')) });
     }
 
-    const { movie } = this.state;
-    this.setMovieData(movie, 1);
-    this.getPage(1);
+    this.getGenre(1);
+
+    // this.getPage(1);
 
     this.addRatedMovies();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { rateMovieId, rateValue, sessionId } = this.state;
-
-    if (rateMovieId && rateValue && rateMovieId !== prevState.rateMovieId && rateValue !== prevState.rateValue) {
-      this.movieAPI.rateMovie(sessionId, rateMovieId, rateValue);
+    const { rateMovieId, rateValue, sessionId, movie, newPage, movieData } = this.state;
+    if (movie !== prevState.movie || newPage !== prevState.newPage) {
+      this.setState({ loading: true });
     }
-
-    if (rateValue !== prevState.rateValue || rateMovieId !== prevState.rateMovieId) {
+    console.log(movieData);
+    if (rateMovieId !== prevState.rateMovieId || rateValue !== prevState.rateValue) {
+      this.movieAPI.rateMovie(sessionId, rateMovieId, rateValue).then((res) => {
+        console.log(res);
+        if (res) this.addRatedMovies();
+      });
       this.updateRate(rateMovieId, rateValue);
     }
 
-    setTimeout(() => {
-      this.addRatedMovies();
-    });
-    const { movie, newPage } = this.state;
     if (movie !== prevState.movie) {
-      this.setState({ loading: true });
-      this.setMovieData(movie, 1);
+      this.getPage(1);
+      this.getGenre(1);
     }
-    if (newPage !== prevState.newPage) {
-      this.setState({ loading: true });
-      this.setMovieData(movie, newPage);
-    }
+    if (newPage !== prevState.newPage) this.getGenre(newPage);
   }
 
   setError = () => {
@@ -73,9 +71,19 @@ export default class App extends Component {
     this.movieAPI
       .getData(name, page)
       .then((data) => {
+        const { genresData } = this.state;
         this.setState({
           movieData: data.results.map((i) => {
             const lsItem = JSON.parse(localStorage.getItem('ratedMovies')).filter((item) => item.id === i.id);
+            const itemGenresArr = [];
+            genresData.forEach((element) => {
+              i.genre_ids.forEach((el) => {
+                if (el === element.id) {
+                  itemGenresArr.push(element.name);
+                }
+              });
+            });
+            console.log(itemGenresArr);
             return {
               title: i.title,
               overview: i.overview,
@@ -84,6 +92,7 @@ export default class App extends Component {
               id: i.id,
               rateValue: lsItem.length !== 0 ? lsItem[0].rateValue : null,
               rateAvg: Number(i.vote_average.toFixed(1)),
+              genres: itemGenresArr,
             };
           }),
           loading: false,
@@ -92,6 +101,18 @@ export default class App extends Component {
       })
       .catch(() => {
         this.setError();
+      });
+  };
+
+  getGenre = (page) => {
+    const { movie } = this.state;
+    this.movieAPI
+      .getGenres()
+      .then((res) => {
+        this.setState({ genresData: res });
+      })
+      .then(() => {
+        this.setMovieData(movie, page);
       });
   };
 
@@ -123,6 +144,8 @@ export default class App extends Component {
       arrLocal.push(...movieData.filter((i) => i.id === rateMovieId));
     }
     localStorage.setItem('ratedMovies', JSON.stringify(arrLocal));
+    this.setState({ loading: false });
+    // this.movieAPI.getRatedMovies(sessionId);
   };
 
   updateMovieState = (event) => {

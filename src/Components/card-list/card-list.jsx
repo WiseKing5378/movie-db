@@ -9,7 +9,7 @@ export default class CardList extends Component {
     const { movieData, getRateMovieValues } = this.props;
 
     const dataArr = movieData.map((i) => {
-      const { title, overview, releaseDate, posterPath, id, rateAvg, rateValue } = i;
+      const { title, overview, releaseDate, posterPath, id, rateAvg, rateValue, genres } = i;
 
       return (
         <Card
@@ -22,6 +22,7 @@ export default class CardList extends Component {
           posterPath={posterPath}
           rateValue={rateValue}
           rateAvg={rateAvg}
+          genres={genres}
         />
       );
     });

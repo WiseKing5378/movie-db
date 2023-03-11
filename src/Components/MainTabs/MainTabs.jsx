@@ -15,6 +15,8 @@ export default class MainTabs extends Component {
     };
   }
 
+  componentDidMount() {}
+
   componentDidUpdate() {}
 
   render() {
@@ -30,6 +32,7 @@ export default class MainTabs extends Component {
 
     return (
       <Tabs
+        destroyInactiveTabPane="true"
         onChange={(activeKey) => {
           this.setState({ activeTab: activeKey });
         }}

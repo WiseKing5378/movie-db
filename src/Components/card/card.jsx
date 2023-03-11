@@ -7,7 +7,7 @@ import Photo from './1.png';
 
 export default class Card extends Component {
   render() {
-    const { title, overview, releaseDate, posterPath, id, rateAvg, getRateMovieValues, rateValue } = this.props;
+    const { title, overview, releaseDate, posterPath, id, rateAvg, getRateMovieValues, rateValue, genres } = this.props;
     const { Title, Text } = Typography;
     let rateAvgColor = '#66E900';
 
@@ -40,10 +40,10 @@ export default class Card extends Component {
 
           <Text type="secondary">{releaseDate}</Text>
           <Space size={[0, 8]} wrap>
-            <Tag>Tag 1</Tag>
-            <Tag>Tag 2</Tag>
+            <Tag>{genres[0]}</Tag>
+            <Tag>{genres[1]}</Tag>
           </Space>
-          <Text className="card__text">{`${overview.replace(/^(.{90}[^\s]*).*/, '$1')}...`}</Text>
+          <Text className="card__text">{`${overview.replace(/^(.{90}[^\s]*).*/, '$1')}`}</Text>
           <Rate
             value={rateValue}
             className="rate"

@@ -38,4 +38,11 @@ export default class MovieAPI {
     const data = await resp.json();
     return data.results;
   }
+
+  async getGenres() {
+    const resp = await fetch(`${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}`);
+    const data = await resp.json();
+    // console.log(data.genres);
+    return data.genres;
+  }
 }
