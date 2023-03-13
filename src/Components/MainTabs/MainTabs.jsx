@@ -23,6 +23,7 @@ export default class MainTabs extends Component {
     const { getInputValue, movieData, ratedMovies, loading, error, getRateMovieValues, totalPages, getPage, newPage } =
       this.props;
 
+    console.log(ratedMovies.length);
     const loader = loading ? <Spin size="large" /> : null;
     const content = !loading ? <CardList getRateMovieValues={getRateMovieValues} movieData={movieData} /> : null;
     const err =
@@ -59,9 +60,12 @@ export default class MainTabs extends Component {
             label: 'Rated',
             key: '2',
             children: (
-              <section className="main">
-                <CardList movieData={ratedMovies} />
-              </section>
+              <div>
+                <section className="main">
+                  <CardList movieData={ratedMovies.slice(0, 20)} />
+                </section>
+                <Footer totalPages={ratedMovies.length - 19} getPage={getPage} newPage={newPage} />
+              </div>
             ),
           },
         ]}

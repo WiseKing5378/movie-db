@@ -26,8 +26,11 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    // const { movie } = this.state;
-    if (localStorage.getItem('token') === null) {
+    const { movie, newPage } = this.state;
+    if (Date.now() - JSON.parse(localStorage.getItem('tokenCreatedTime')) > 86400000) {
+      localStorage.clear();
+    }
+    if (JSON.parse(localStorage.getItem('token')) === null) {
       this.movieAPI.createGuestSession().then((data) => {
         this.setState({ sessionId: data });
       });
@@ -35,22 +38,27 @@ export default class App extends Component {
       this.setState({ sessionId: JSON.parse(localStorage.getItem('token')) });
     }
 
-    this.getGenre(1);
-
-    // this.getPage(1);
+    this.movieAPI
+      .getGenres()
+      .then((res) => {
+        this.setState({ genresData: res });
+      })
+      .then(() => {
+        this.setMovieData(movie, newPage);
+      });
 
     this.addRatedMovies();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { rateMovieId, rateValue, sessionId, movie, newPage, movieData } = this.state;
+    const { rateMovieId, rateValue, sessionId, movie, newPage } = this.state;
+
     if (movie !== prevState.movie || newPage !== prevState.newPage) {
       this.setState({ loading: true });
     }
-    console.log(movieData);
+
     if (rateMovieId !== prevState.rateMovieId || rateValue !== prevState.rateValue) {
       this.movieAPI.rateMovie(sessionId, rateMovieId, rateValue).then((res) => {
-        console.log(res);
         if (res) this.addRatedMovies();
       });
       this.updateRate(rateMovieId, rateValue);
@@ -58,9 +66,9 @@ export default class App extends Component {
 
     if (movie !== prevState.movie) {
       this.getPage(1);
-      this.getGenre(1);
+      this.setMovieData(movie, 1);
     }
-    if (newPage !== prevState.newPage) this.getGenre(newPage);
+    if (newPage !== prevState.newPage) this.setMovieData(movie, newPage);
   }
 
   setError = () => {
@@ -83,7 +91,6 @@ export default class App extends Component {
                 }
               });
             });
-            console.log(itemGenresArr);
             return {
               title: i.title,
               overview: i.overview,
@@ -104,18 +111,6 @@ export default class App extends Component {
       });
   };
 
-  getGenre = (page) => {
-    const { movie } = this.state;
-    this.movieAPI
-      .getGenres()
-      .then((res) => {
-        this.setState({ genresData: res });
-      })
-      .then(() => {
-        this.setMovieData(movie, page);
-      });
-  };
-
   updateRate = (movieId, rateValue) => {
     this.setState(({ movieData }) => {
       return {
@@ -132,20 +127,21 @@ export default class App extends Component {
 
   addRatedMovies = () => {
     const { movieData, rateMovieId, sessionId } = this.state;
+
     if (localStorage.length === 0 || localStorage.getItem('ratedMovies') === '[]') {
       localStorage.setItem('ratedMovies', JSON.stringify(movieData.filter((i) => i.rateValue)));
       localStorage.setItem('token', JSON.stringify(sessionId));
     }
     const arrLocal = JSON.parse(localStorage.getItem('ratedMovies'));
-
+    const movieDataItem = movieData.filter((i) => i.id === rateMovieId);
     const arr = arrLocal.filter((i) => i.id === rateMovieId);
 
     if (arr.length === 0) {
-      arrLocal.push(...movieData.filter((i) => i.id === rateMovieId));
+      arrLocal.push(...movieDataItem);
     }
+
     localStorage.setItem('ratedMovies', JSON.stringify(arrLocal));
     this.setState({ loading: false });
-    // this.movieAPI.getRatedMovies(sessionId);
   };
 
   updateMovieState = (event) => {

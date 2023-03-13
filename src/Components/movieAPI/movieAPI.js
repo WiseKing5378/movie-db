@@ -15,6 +15,7 @@ export default class MovieAPI {
   async createGuestSession() {
     const resp = await fetch(`${this.baseUrl}/authentication/guest_session/new?api_key=${this.apiKey}`);
     const data = await resp.json();
+    localStorage.setItem('tokenCreatedTime', JSON.stringify(Date.now()));
     return data.guest_session_id;
   }
 
@@ -42,7 +43,6 @@ export default class MovieAPI {
   async getGenres() {
     const resp = await fetch(`${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}`);
     const data = await resp.json();
-    // console.log(data.genres);
     return data.genres;
   }
 }

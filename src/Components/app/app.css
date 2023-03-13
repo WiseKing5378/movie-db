@@ -3,9 +3,8 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 25px;
-
 }
-.movieapp{
+.movieapp {
   max-width: 980px;
   margin: auto;
   display: flex;
