@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+import { format } from 'date-fns';
 import { Component } from 'react';
 import { Progress, Space, Tag, Typography, Rate, Image } from 'antd';
 
@@ -42,7 +43,7 @@ export default class Card extends Component {
             </Space>
           </div>
 
-          <Text type="secondary">{releaseDate}</Text>
+          <Text type="secondary">{format(new Date(releaseDate), 'MMMM dd, yyyy')}</Text>
           <Space size={[0, 8]} wrap>
             {cardGenres}
           </Space>
