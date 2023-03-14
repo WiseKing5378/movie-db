@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable class-methods-use-this */
 import { Component } from 'react';
 import { debounce } from 'lodash';
@@ -41,7 +42,7 @@ export default class App extends Component {
     this.movieAPI
       .getGenres()
       .then((res) => {
-        this.setState({ genresData: res });
+        this.setState({ loading: true, genresData: res });
       })
       .then(() => {
         this.setMovieData(movie, newPage);
@@ -116,7 +117,6 @@ export default class App extends Component {
       return {
         movieData: movieData.map((i) => {
           if (i.id === movieId) {
-            // eslint-disable-next-line no-param-reassign
             i = { ...i, rateValue };
           }
           return i;
@@ -126,20 +126,24 @@ export default class App extends Component {
   };
 
   addRatedMovies = () => {
-    const { movieData, rateMovieId, sessionId } = this.state;
+    const { movieData, rateMovieId, sessionId, rateValue } = this.state;
 
     if (localStorage.length === 0 || localStorage.getItem('ratedMovies') === '[]') {
       localStorage.setItem('ratedMovies', JSON.stringify(movieData.filter((i) => i.rateValue)));
       localStorage.setItem('token', JSON.stringify(sessionId));
     }
-    const arrLocal = JSON.parse(localStorage.getItem('ratedMovies'));
+    let arrLocal = JSON.parse(localStorage.getItem('ratedMovies'));
     const movieDataItem = movieData.filter((i) => i.id === rateMovieId);
-    const arr = arrLocal.filter((i) => i.id === rateMovieId);
+    const arrItem = arrLocal.filter((i) => i.id === rateMovieId);
 
-    if (arr.length === 0) {
+    if (arrItem.length === 0) {
       arrLocal.push(...movieDataItem);
+    } else if (arrItem[0].rateValue !== rateValue) {
+      arrLocal = arrLocal.map((i) => {
+        if (i.id === rateMovieId) i.rateValue = rateValue;
+        return i;
+      });
     }
-
     localStorage.setItem('ratedMovies', JSON.stringify(arrLocal));
     this.setState({ loading: false });
   };
@@ -171,7 +175,7 @@ export default class App extends Component {
           movieData={movieData}
           error={error}
           getInputValue={this.getInputValue}
-          ratedMovies={JSON.parse(localStorage.getItem('ratedMovies'))}
+          ratedMovies={JSON.parse(localStorage.getItem('ratedMovies')) || []}
           totalPages={totalPages}
           getPage={this.getPage}
           newPage={newPage}

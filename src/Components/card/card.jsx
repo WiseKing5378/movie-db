@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { Component } from 'react';
-import { Progress, Space, Tag, Typography, Rate } from 'antd';
+import { Progress, Space, Tag, Typography, Rate, Image } from 'antd';
 
 import './card.css';
 import Photo from './1.png';
@@ -14,11 +14,16 @@ export default class Card extends Component {
     if (rateAvg <= 3) rateAvgColor = '#E90000';
     if (rateAvg > 3 && rateAvg <= 5) rateAvgColor = '#E97E00';
     if (rateAvg > 5 && rateAvg <= 7) rateAvgColor = '#E9D100';
+    let key = 0;
+    const cardGenres = genres.map((i) => {
+      key += 1;
+      return <Tag key={key}>{i}</Tag>;
+    });
 
     return (
       <li className="card">
         <div className="card__img">
-          <img src={posterPath ? `https://image.tmdb.org/t/p/w500/${posterPath}` : Photo} alt="Movie" />
+          <Image width={183} height={281} src={posterPath ? `https://image.tmdb.org/t/p/w500/${posterPath}` : Photo} />
         </div>
         <div className="card__description">
           <div className="title-sec">
@@ -35,19 +40,18 @@ export default class Card extends Component {
                 }}
               />
             </Space>
-            {/* <div className="rate-avg">{rateAvg}</div> */}
           </div>
 
           <Text type="secondary">{releaseDate}</Text>
           <Space size={[0, 8]} wrap>
-            <Tag>{genres[0]}</Tag>
-            <Tag>{genres[1]}</Tag>
+            {cardGenres}
           </Space>
           <Text className="card__text">{`${overview.replace(/^(.{90}[^\s]*).*/, '$1')}`}</Text>
           <Rate
             value={rateValue}
             className="rate"
             count="10"
+            allowClear=""
             allowHalf="true"
             onChange={(value) => {
               getRateMovieValues(value, id);

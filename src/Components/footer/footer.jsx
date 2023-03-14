@@ -10,7 +10,14 @@ export default class Footer extends Component {
 
     return (
       <footer className="pagination">
-        <Pagination onChange={getPage} current={newPage} total={totalPages} />
+        <Pagination
+          showSizeChanger=""
+          onChange={getPage}
+          current={newPage}
+          total={totalPages}
+          defaultPageSize="20"
+          hideOnSinglePage
+        />
       </footer>
     );
   }

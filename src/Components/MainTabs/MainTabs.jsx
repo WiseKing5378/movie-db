@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unused-state */
 /* eslint-disable class-methods-use-this */
 import { Component } from 'react';
 import { Tabs, Input, Spin, Alert } from 'antd';
@@ -11,20 +10,26 @@ export default class MainTabs extends Component {
   constructor() {
     super();
     this.state = {
-      activeTab: 1,
+      ratedPage: 1,
     };
   }
 
-  componentDidMount() {}
-
-  componentDidUpdate() {}
+  getPage = (page) => {
+    this.setState({ ratedPage: page });
+  };
 
   render() {
     const { getInputValue, movieData, ratedMovies, loading, error, getRateMovieValues, totalPages, getPage, newPage } =
       this.props;
+    const { ratedPage } = this.state;
+    let firstIdx = 0;
+    let secondIdx = 20;
+    if (ratedPage > 1) {
+      firstIdx = ratedPage * 20 - 20;
+      secondIdx = ratedPage * 20;
+    }
 
-    console.log(ratedMovies.length);
-    const loader = loading ? <Spin size="large" /> : null;
+    const loader = loading ? <Spin tip="Loading" size="large" /> : null;
     const content = !loading ? <CardList getRateMovieValues={getRateMovieValues} movieData={movieData} /> : null;
     const err =
       error || (movieData.length === 0 && !loading) ? (
@@ -33,10 +38,6 @@ export default class MainTabs extends Component {
 
     return (
       <Tabs
-        destroyInactiveTabPane="true"
-        onChange={(activeKey) => {
-          this.setState({ activeTab: activeKey });
-        }}
         defaultActiveKey="1"
         style={{
           marginBottom: 32,
@@ -62,9 +63,9 @@ export default class MainTabs extends Component {
             children: (
               <div>
                 <section className="main">
-                  <CardList movieData={ratedMovies.slice(0, 20)} />
+                  <CardList movieData={ratedMovies.slice(firstIdx, secondIdx)} />
                 </section>
-                <Footer totalPages={ratedMovies.length - 19} getPage={getPage} newPage={newPage} />
+                <Footer totalPages={ratedMovies.length} getPage={this.getPage} newPage={ratedPage} />
               </div>
             ),
           },

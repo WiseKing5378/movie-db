@@ -9,6 +9,7 @@ export default class MovieAPI {
       `${this.baseUrl}/search/movie?query=${name}&page=${page}&api_key=${this.apiKey}&include_adult=false`
     );
     const data = await resp.json();
+
     return data;
   }
 
