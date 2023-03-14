@@ -1,10 +1,20 @@
-/* eslint-disable camelcase */
+/* eslint-disable react/static-property-placement */
+
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Card from '../card';
 import './card-list.css';
 
 export default class CardList extends Component {
+  static defaultProps = {
+    getRateMovieValues: () => {},
+  };
+
+  static propTypes = {
+    getRateMovieValues: PropTypes.func,
+  };
+
   render() {
     const { movieData, getRateMovieValues } = this.props;
 

@@ -1,12 +1,22 @@
 /* eslint-disable class-methods-use-this */
+/* eslint-disable react/static-property-placement */
 import { format } from 'date-fns';
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Progress, Space, Tag, Typography, Rate, Image } from 'antd';
 
 import './card.css';
 import Photo from './1.png';
 
 export default class Card extends Component {
+  static defaultProps = {
+    getRateMovieValues: () => {},
+  };
+
+  static propTypes = {
+    getRateMovieValues: PropTypes.func,
+  };
+
   render() {
     const { title, overview, releaseDate, posterPath, id, rateAvg, getRateMovieValues, rateValue, genres } = this.props;
     const { Title, Text } = Typography;
@@ -43,7 +53,7 @@ export default class Card extends Component {
             </Space>
           </div>
 
-          <Text type="secondary">{format(new Date(releaseDate), 'MMMM dd, yyyy')}</Text>
+          <Text type="secondary">{releaseDate ? format(new Date(releaseDate), 'MMMM dd, yyyy') : 'unknown'}</Text>
           <Space size={[0, 8]} wrap>
             {cardGenres}
           </Space>

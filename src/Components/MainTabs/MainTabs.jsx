@@ -1,12 +1,34 @@
+/* eslint-disable react/static-property-placement */
 /* eslint-disable class-methods-use-this */
 import { Component } from 'react';
 import { Tabs, Input, Spin, Alert } from 'antd';
+import PropTypes from 'prop-types';
 
 import CardList from '../card-list';
 import './MainTabs.css';
 import Footer from '../footer';
 
 export default class MainTabs extends Component {
+  static defaultProps = {
+    getInputValue: () => {},
+    getRateMovieValues: () => {},
+    getPage: () => {},
+    loading: false,
+    error: false,
+    totalPages: 1,
+    newPage: 1,
+  };
+
+  static propTypes = {
+    getInputValue: PropTypes.func,
+    getRateMovieValues: PropTypes.func,
+    getPage: PropTypes.func,
+    loading: PropTypes.bool,
+    error: PropTypes.bool,
+    totalPages: PropTypes.number,
+    newPage: PropTypes.number,
+  };
+
   constructor() {
     super();
     this.state = {
