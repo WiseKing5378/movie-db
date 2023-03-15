@@ -4,9 +4,9 @@ import { Component } from 'react';
 import { Tabs, Input, Spin, Alert } from 'antd';
 import PropTypes from 'prop-types';
 
-import CardList from '../card-list';
+import CardList from '../CardList';
 import './MainTabs.css';
-import Footer from '../footer';
+import Footer from '../Footer';
 
 export default class MainTabs extends Component {
   static defaultProps = {

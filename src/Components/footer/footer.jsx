@@ -4,7 +4,7 @@ import { Component } from 'react';
 import { Pagination } from 'antd';
 import PropTypes from 'prop-types';
 
-import './footer.css';
+import './Footer.css';
 
 export default class Footer extends Component {
   static defaultProps = {

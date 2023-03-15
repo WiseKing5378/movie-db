@@ -4,8 +4,8 @@ import { Component } from 'react';
 import { debounce } from 'lodash';
 
 import MainTabs from '../MainTabs';
-import MovieAPI from '../movieAPI/movieAPI';
-import './app.css';
+import MovieAPI from '../MovieAPI/MovieAPI';
+import './App.css';
 
 export default class App extends Component {
   movieAPI = new MovieAPI();
