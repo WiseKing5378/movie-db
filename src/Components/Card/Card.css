@@ -1,0 +1,45 @@
+.card {
+  display: flex;
+  width: 451px;
+  height: 281px;
+  box-shadow: 0px 4px 12px 0px #00000026;
+  padding: 7px;
+}
+
+.card__img {
+  width: 183px;
+}
+
+.title-sec {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.ant-progress-inner {
+  display: flex;
+  width: 35px !important;
+  height: 35px !important;
+  font-size: 14px !important;
+}
+
+.card__description {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 20px;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.card__text {
+  font-size: 12px;
+}
+
+.card__title {
+  margin: 0;
+  max-width: 190px;
+}
+
+.rate svg {
+  width: 15px;
+  height: 15px;
+}
