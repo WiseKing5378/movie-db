@@ -70,25 +70,25 @@ export default class MainTabs extends Component {
             label: 'Search',
             key: '1',
             children: (
-              <div>
+              <>
                 <Input onInput={getInputValue} placeholder="Type to search" />
                 <section className="main">
                   {loader} {content} {err}
                 </section>
                 <Footer totalPages={totalPages} getPage={getPage} newPage={newPage} />
-              </div>
+              </>
             ),
           },
           {
             label: 'Rated',
             key: '2',
             children: (
-              <div>
+              <>
                 <section className="main">
                   <CardList movieData={ratedMovies.slice(firstIdx, secondIdx)} />
                 </section>
                 <Footer totalPages={ratedMovies.length} getPage={this.getPage} newPage={ratedPage} />
-              </div>
+              </>
             ),
           },
         ]}
