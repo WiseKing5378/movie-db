@@ -1,4 +1,4 @@
-Vercel - https://movie-db-omega-three.vercel.app
+Vercel - https://movie-db-kappa-plum.vercel.app
 
 # Getting Started with Create React App
 
