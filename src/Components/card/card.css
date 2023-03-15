@@ -4,13 +4,11 @@
   height: 281px;
   box-shadow: 0px 4px 12px 0px #00000026;
   padding: 7px;
-  
 }
 
 .card__img {
   width: 183px;
 }
-
 
 .title-sec {
   display: flex;
